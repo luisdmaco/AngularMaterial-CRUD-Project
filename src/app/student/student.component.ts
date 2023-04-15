@@ -37,6 +37,12 @@ export class StudentComponent {
     this.studentData ={} as Student;
   }
 
+  ngOnInit(): void{
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.getAllStudents();
+  }
+
   //document this method
   onSumit(){
     if(this.studentForm.form.valid){
