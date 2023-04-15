@@ -24,7 +24,7 @@ export class StudentComponent {
   studentData!: Student;
 
   dataSource = new MatTableDataSource();
-  displayedColumns: string[] = ['id', 'name', 'age', 'mobile', 'email', 'address']
+  displayedColumns: string[] = ['id', 'name', 'age', 'mobile', 'email', 'address', 'actions']
 
   @ViewChild(MatPaginator, {static:true})
   paginator!: MatPaginator;
