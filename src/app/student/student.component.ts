@@ -7,6 +7,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import { NgForm } from '@angular/forms';
+import { HttpDataService } from '../services/http-data.service';
+
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-student',
@@ -30,9 +33,8 @@ export class StudentComponent {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  cancelEdit(){
-    this.isEditMode = false;
-    this.studentForm.resetForm();
+  constructor(private HttpDataServices: HttpDataService){
+    this.studentData ={} as Student;
   }
 
   //document this method
@@ -41,14 +43,60 @@ export class StudentComponent {
       console.log("Valid.");
       if(this.isEditMode){
         console.log("Update.");
-        //this.updateStudent();
+        this.updateStudent();
       }else{
         console.log("Create");
-        //this.addStudent();
+        this.addStudent();
       }
       this.cancelEdit();
     }else{
       console.log("Invalid data.");
     }
+  }
+
+  getAllStudents(){
+    this.HttpDataServices.getList().subscribe((response: any) =>{
+      this.dataSource.data = response;
+    });
+  }
+
+  editItem(element: any){
+    this.studentData = _.cloneDeep(element);
+    this.isEditMode = true;
+  }
+
+  cancelEdit(){
+    this.isEditMode = false;
+    this.studentForm.resetForm();
+  }
+
+  deleteItem(id: string){
+    this.HttpDataServices.deleteItem(id).subscribe((response: any) =>{
+      this.dataSource.data = this.dataSource.data.filter((o:any)=>{
+        return o.id !== id ? o : false;
+      });
+      console.log(this.dataSource.data);
+    })
+  }
+
+  addStudent(){
+    this.studentData.id = 0;
+    this.HttpDataServices.createItem(this.studentData).subscribe((response: any) =>{
+      this.dataSource.data.push({...response})
+      this.dataSource.data = this.dataSource.data.map((o: any)=>{
+        return 0;
+      });
+    });
+  }
+
+  updateStudent(){
+    this.HttpDataServices.updateItem(this.studentData.id, this.studentData).subscribe((response: any) => {
+      this.dataSource.data = this.dataSource.data.map((o: any)=>{
+        if(o.id == response.id){
+          o = response;
+        }
+        return 0;
+      })
+    })
   }
 }
