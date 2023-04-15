@@ -1,0 +1,12 @@
+{
+    "students":[
+        {
+            "id": 1,
+            "name": "Nicolas Haro",
+            "age": 21,
+            "mobile": "Entel",
+            "email": "delegado@upc.edu.pe",
+            "address": "Surco"
+        }
+    ]
+}
